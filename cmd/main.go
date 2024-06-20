@@ -1,7 +1,24 @@
 package main
 
-import http "github.com/rodblg/bonds-api-golang/pkg/http"
+import (
+	"log"
+
+	"github.com/rodblg/bonds-api-golang/pkg/database"
+	http "github.com/rodblg/bonds-api-golang/pkg/http"
+	"github.com/rodblg/bonds-api-golang/pkg/usecases"
+)
 
 func main() {
-	http.ListenAndServe()
+
+	databaseName := ""
+	collectionName := ""
+
+	mongoDatabase, err := database.MongoConnection(databaseName, collectionName)
+	if err != nil {
+		log.Println("error with database connection")
+	}
+
+	usecasesController := usecases.NewUsecasesController(*mongoDatabase)
+
+	http.ListenAndServe(usecasesController)
 }
