@@ -7,9 +7,11 @@ import (
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/go-chi/cors"
 	"github.com/go-chi/render"
+
+	"github.com/rodblg/bonds-api-golang/pkg/usecases"
 )
 
-func ListenAndServe() {
+func ListenAndServe(u *usecases.Usecases) {
 
 	r := chi.NewRouter()
 
