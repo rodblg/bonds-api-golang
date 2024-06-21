@@ -11,7 +11,7 @@ import (
 	"github.com/rodblg/bonds-api-golang/pkg/usecases"
 )
 
-func ListenAndServe(u *usecases.Usecases) {
+func ListenAndServe(usecases *usecases.UsecasesController) {
 
 	r := chi.NewRouter()
 
@@ -33,7 +33,7 @@ func ListenAndServe(u *usecases.Usecases) {
 	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
 		w.Write(([]byte("hello world")))
 	})
-	r.Mount("/user", NewUserController().Routes())
+	r.Mount("/user", NewUserController(*usecases).Routes())
 
 	http.ListenAndServe(":8080", r)
 
