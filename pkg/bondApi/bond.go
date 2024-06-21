@@ -3,14 +3,14 @@ package bondApi
 import "time"
 
 type Bond struct {
-	ID                       string
-	Name                     string
-	FaceValue                float64 //Original principal amount of the bond
-	CurrentValue             float64 //
-	Isin                     string  //International Securities Identification Number (ISIN)
-	Issuer                   string  //Issuer of the bond
-	InterestRate             float64
-	InterestPaymentFrequency string
-	MaturityDate             time.Time
-	Description              string
+	ID                       string    `json:"id,omitempty"`
+	Name                     string    `json:"name"`
+	FaceValue                float64   `json:"face_value"`    //Original principal amount of the bond
+	CurrentValue             float64   `json:"current_value"` //
+	Isin                     string    `json:"isin"`          //International Securities Identification Number (ISIN)
+	Issuer                   string    `json:"issuer"`        //Issuer of the bond
+	InterestRate             float64   `json:"interest_rate"`
+	InterestPaymentFrequency string    `json:"interest_payment_frequency"`
+	MaturityDate             time.Time `json:"maturity_date"`
+	Description              string    `json:"description"`
 }
