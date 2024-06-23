@@ -25,24 +25,55 @@ func NewUserController(usecase *usecases.UsecasesController) *UserController {
 func (u *UserController) Routes() chi.Router {
 	r := chi.NewRouter()
 
-	//r.Get("/bond/{id}", u.GetBond)
-	//r.Get("/bond", u.GetAllBonds)
-	r.Post("/bond", u.NewBonds)
+	r.Get("/bond/{id}", u.GetBond)
+	r.Get("/bond", u.GetAllBonds)
+	r.Post("/bond", u.PublishNewBond)
+	//r.Get("/bond/buy/{id}", u.BuyBond)
 	// r.Get()
 	// r.Post("/")
 	// r.Post()
 	return r
 }
 
-// func (u *UserController) GetBond() (w http.ResponseWriter, r *http.Request) {
+func (u *UserController) GetBond(w http.ResponseWriter, r *http.Request) {
+	//Check user credentials and authorization
 
-// }
+	//Get bond request id
+	bondId := chi.URLParam(r, "id")
+	if bondId == "" {
+		//render.Render(w, r, http.StatusBadRequest)
+		log.Println("error fetching url {id}")
+		return
+	}
 
-// func (u *UserController) GetAllBonds() (w http.ResponseWriter, r *http.Request) {
+	log.Println(bondId)
+	//get into usecases
+	bond, err := u.Usecase.GetBond(bondId)
+	if err != nil {
+		log.Println("error fetching bond: ", err)
+		return
+	}
 
-// }
+	//is this to check the availability of the bond??
 
-func (u *UserController) NewBonds(w http.ResponseWriter, r *http.Request) {
+	w.WriteHeader(http.StatusCreated)
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(bond)
+}
+
+func (u *UserController) GetAllBonds(w http.ResponseWriter, r *http.Request) {
+	//check authorization or that user exists in db
+	allBonds, err := u.Usecase.GetAllBonds()
+	if err != nil {
+		log.Println("error fetching all bonds: ", err)
+		return
+	}
+	w.WriteHeader(http.StatusCreated)
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(allBonds)
+}
+
+func (u *UserController) PublishNewBond(w http.ResponseWriter, r *http.Request) {
 	body, err := ioutil.ReadAll(r.Body)
 	if err != nil {
 		log.Println("error readint request body")
@@ -64,7 +95,7 @@ func (u *UserController) NewBonds(w http.ResponseWriter, r *http.Request) {
 	log.Println("Data Received")
 	log.Printf("%+v", newData)
 
-	err = u.Usecase.SellNewBonds(newData)
+	err = u.Usecase.PublishNewBond(newData)
 	if err != nil {
 		log.Println("error while creating new bonds: ", err)
 		return
