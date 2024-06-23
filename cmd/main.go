@@ -10,15 +10,17 @@ import (
 
 func main() {
 
-	databaseName := ""
-	collectionName := ""
+	databaseName := "cicada"
+	collectionName := "testing"
 
-	mongoDatabase, err := database.MongoConnection(databaseName, collectionName)
+	mongoDatabase, err := database.MongoConnection(databaseName)
 	if err != nil {
-		log.Println("error with database connection")
+		log.Println("error with database connection", err)
 	}
 
-	usecasesController := usecases.NewUsecasesController(*mongoDatabase)
+	storage := database.NewMongoController(mongoDatabase, collectionName)
+
+	usecasesController := usecases.NewUsecasesController(storage)
 
 	http.ListenAndServe(usecasesController)
 }
