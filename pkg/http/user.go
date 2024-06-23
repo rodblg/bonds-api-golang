@@ -1,7 +1,9 @@
 package http
 
 import (
+	"bytes"
 	"encoding/json"
+	"io/ioutil"
 	"log"
 	"net/http"
 
@@ -11,11 +13,13 @@ import (
 )
 
 type UserController struct {
-	usecase usecases.UsecasesController
+	Usecase *usecases.UsecasesController
 }
 
-func NewUserController(usecase usecases.UsecasesController) *UserController {
-	return &UserController{}
+func NewUserController(usecase *usecases.UsecasesController) *UserController {
+	return &UserController{
+		Usecase: usecase,
+	}
 }
 
 func (u *UserController) Routes() chi.Router {
@@ -23,7 +27,7 @@ func (u *UserController) Routes() chi.Router {
 
 	//r.Get("/bond/{id}", u.GetBond)
 	//r.Get("/bond", u.GetAllBonds)
-	r.Post("/bond", u.NewBond)
+	r.Post("/bond", u.NewBonds)
 	// r.Get()
 	// r.Post("/")
 	// r.Post()
@@ -39,22 +43,28 @@ func (u *UserController) Routes() chi.Router {
 // }
 
 func (u *UserController) NewBonds(w http.ResponseWriter, r *http.Request) {
-
-	decoder := json.NewDecoder(r.Body)
+	body, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		log.Println("error readint request body")
+		return
+	}
 	defer r.Body.Close()
+
+	//decoder := json.NewDecoder(r.Body)
+	decoder := json.NewDecoder(bytes.NewReader(body))
 
 	var newData bondApi.Bond
 
-	err := decoder.Decode(&newData)
+	err = decoder.Decode(&newData)
 	if err != nil {
 		log.Println("error while unmarshaling into newBond variable: ", err)
 		return
 	}
 
 	log.Println("Data Received")
-	log.Printf("%+v", newBond)
+	log.Printf("%+v", newData)
 
-	err = usecases.SellNewBonds(newData)
+	err = u.Usecase.SellNewBonds(newData)
 	if err != nil {
 		log.Println("error while creating new bonds: ", err)
 		return
@@ -62,6 +72,6 @@ func (u *UserController) NewBonds(w http.ResponseWriter, r *http.Request) {
 
 	w.WriteHeader(http.StatusCreated)
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(newBond)
+	json.NewEncoder(w).Encode(newData)
 
 }
