@@ -13,4 +13,6 @@ type Bond struct {
 	InterestPaymentFrequency string    `json:"interest_payment_frequency"`
 	MaturityDate             time.Time `json:"maturity_date"`
 	Description              string    `json:"description"`
+	CreatedAt                time.Time `json:"created_at"`
+	UpdatedAt                time.Time `json:"updated_at"`
 }
