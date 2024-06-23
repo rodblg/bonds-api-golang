@@ -19,10 +19,28 @@ func NewUsecasesController(s *database.MongoController) *UsecasesController {
 	}
 }
 
-func (u *UsecasesController) SellNewBonds(data bondApi.Bond) error {
+func (u *UsecasesController) GetBond(bondId string) (*bondApi.Bond, error) {
+	log.Println("getting bond from db...")
+	bond, err := u.Storage.GetBond(bondId)
+	if err != nil {
+		return nil, err
+	}
+	return bond, nil
+}
+
+func (u *UsecasesController) GetAllBonds() ([]bondApi.Bond, error) {
+	log.Println("getting all bonds from db...")
+	allBonds, err := u.Storage.GetAllBonds()
+	if err != nil {
+		return nil, err
+	}
+	return allBonds, nil
+}
+
+func (u *UsecasesController) PublishNewBond(data bondApi.Bond) error {
 
 	log.Println("entering usecases")
-	err := u.Storage.InsertNewData(data)
+	err := u.Storage.InsertNewBond(data)
 	if err != nil {
 		return err
 	}
