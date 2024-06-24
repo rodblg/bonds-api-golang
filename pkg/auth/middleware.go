@@ -4,12 +4,14 @@ import (
 	"context"
 	"fmt"
 	"net/http"
+	"strings"
 )
 
 func Authentication() func(http.Handler) http.Handler {
 	return func(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			clientToken := r.Header.Get("token")
+			clientToken := r.Header.Get("Authorization")
+			clientToken = strings.TrimPrefix(clientToken, "Bearer ")
 			if clientToken == "" {
 				w.WriteHeader(http.StatusUnauthorized)
 				fmt.Fprintf(w, "Unauthorized: No authorization header provided")
