@@ -28,6 +28,8 @@ func (u *UserController) Routes() chi.Router {
 	r.Get("/bond/{id}", u.GetBond)
 	r.Get("/bond", u.GetAllBonds)
 	r.Post("/bond", u.PublishNewBond)
+
+	r.Post("/", u.CreateUser)
 	//r.Get("/bond/buy/{id}", u.BuyBond)
 	// r.Get()
 	// r.Post("/")
@@ -105,4 +107,49 @@ func (u *UserController) PublishNewBond(w http.ResponseWriter, r *http.Request) 
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(newData)
 
+}
+
+func (u *UserController) CreateUser(w http.ResponseWriter, r *http.Request) {
+
+	body, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		log.Println("error readint request body")
+		return
+	}
+	defer r.Body.Close()
+
+	//decoder := json.NewDecoder(r.Body)
+	decoder := json.NewDecoder(bytes.NewReader(body))
+
+	var newData bondApi.User
+
+	err = decoder.Decode(&newData)
+	if err != nil {
+		log.Println("error while unmarshaling into newUser variable: ", err)
+		return
+	}
+
+	err = u.Usecase.CreateUser(newData)
+	if err != nil {
+		log.Println("error while creating new user: ", err)
+		return
+	}
+
+	w.WriteHeader(http.StatusCreated)
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(newData)
+
+}
+
+func (u *UserController) GetUser(username string) (*bondApi.User, error) {
+	//Check user credentials and authorization
+
+	//get into usecases
+	user, err := u.Usecase.GetUser(username)
+	if err != nil {
+		log.Println("error fetching bond: ", err)
+		return nil, err
+	}
+
+	return user, nil
 }
