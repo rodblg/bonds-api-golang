@@ -8,6 +8,7 @@ import (
 	"net/http"
 
 	"github.com/go-chi/chi/v5"
+	"github.com/rodblg/bonds-api-golang/pkg/auth"
 	"github.com/rodblg/bonds-api-golang/pkg/bondApi"
 	"github.com/rodblg/bonds-api-golang/pkg/usecases"
 )
@@ -25,6 +26,7 @@ func NewUserController(usecase *usecases.UsecasesController) *UserController {
 func (u *UserController) Routes() chi.Router {
 	r := chi.NewRouter()
 
+	r.Use(auth.Authentication())
 	r.Get("/bond/{id}", u.GetBond)
 	r.Get("/bond", u.GetAllBonds)
 	r.Post("/bond", u.PublishNewBond)
@@ -129,7 +131,10 @@ func (u *UserController) CreateUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = u.Usecase.CreateUser(newData)
+	newData.Password = auth.HashPassword(newData.Password)
+	log.Println(newData)
+
+	err = u.Usecase.CreateUser(&newData)
 	if err != nil {
 		log.Println("error while creating new user: ", err)
 		return
