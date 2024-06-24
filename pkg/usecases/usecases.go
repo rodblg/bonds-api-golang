@@ -47,3 +47,25 @@ func (u *UsecasesController) PublishNewBond(data bondApi.Bond) error {
 
 	return nil
 }
+
+func (u *UsecasesController) CreateUser(data bondApi.User) error {
+
+	log.Println("entering usecases")
+	err := u.Storage.CreateUser(data)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (u *UsecasesController) GetUser(username string) (*bondApi.User, error) {
+
+	log.Println("entering usecases")
+	user, err := u.Storage.GetUser(username)
+	if err != nil {
+		return nil, err
+	}
+
+	return user, nil
+}
