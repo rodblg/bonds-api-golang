@@ -29,7 +29,7 @@ func main() {
 }
 
 func initialMongoSetUp(u *usecases.UsecasesController) {
-	user, err := u.GetUser("Rodrigo")
+	user, err := u.GetUser("rb12@email.com")
 	if err != nil {
 		log.Print(err)
 	}

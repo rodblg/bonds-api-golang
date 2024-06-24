@@ -59,10 +59,9 @@ func (u *UsecasesController) CreateUser(data *bondApi.User) error {
 	return nil
 }
 
-func (u *UsecasesController) GetUser(username string) (*bondApi.User, error) {
+func (u *UsecasesController) GetUser(email string) (*bondApi.User, error) {
 
-	log.Println("entering usecases")
-	user, err := u.Storage.GetUser(username)
+	user, err := u.Storage.GetUser(email)
 	if err != nil {
 		return nil, err
 	}

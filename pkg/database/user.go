@@ -90,7 +90,7 @@ func (c *MongoController) CreateUser(u *bondApi.User) error {
 	return nil
 }
 
-func (c *MongoController) GetUser(username string) (*bondApi.User, error) {
+func (c *MongoController) GetUser(email string) (*bondApi.User, error) {
 
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second) // Adjust timeout as needed
 	defer cancel()
@@ -98,10 +98,11 @@ func (c *MongoController) GetUser(username string) (*bondApi.User, error) {
 	col := c.Db.Collection("users")
 
 	var user UserModel
-	err := col.FindOne(ctx, bson.M{"name": bson.M{"$eq": username}}).Decode(&user)
-
+	//err := col.FindOne(ctx, bson.M{"email": bson.M{"$eq": email}}).Decode(&user)
+	err := col.FindOne(ctx, bson.M{"email": email}).Decode(&user)
+	//log.Println("==========", err)
 	if err == mongo.ErrNoDocuments {
-		return nil, fmt.Errorf("element with username: %s is not found", username)
+		return nil, fmt.Errorf("element with email: %s is not found", email)
 	} else if err != nil {
 		return nil, fmt.Errorf("error fetching element: %w", err)
 	}

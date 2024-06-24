@@ -49,17 +49,18 @@ func (c *AuthController) Routes() chi.Router {
 
 func (c *AuthController) Login(w http.ResponseWriter, r *http.Request) {
 
-	username, password, ok := r.BasicAuth()
+	email, password, ok := r.BasicAuth()
 	if !ok {
 		// If the structure of the body is wrong, return an HTTP error
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
 
-	user, err := c.User.GetUser(username)
+	user, err := c.User.GetUser(email)
 	if err != nil {
-		log.Println("user not found")
+		log.Println("user not found", err)
 		w.WriteHeader(http.StatusBadRequest)
+		return
 	}
 	// 	log.Print(user, err)
 
