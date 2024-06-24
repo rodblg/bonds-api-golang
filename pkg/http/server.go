@@ -24,15 +24,14 @@ func ListenAndServe(usecases *usecases.UsecasesController) {
 	r.Use(cors.Handler(cors.Options{
 		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
 		AllowedHeaders:   []string{"Accept", "Authorization", "Content-Type", "X-CSRF-Token"},
-		ExposedHeaders:   []string{"Link"},
 		AllowCredentials: true,
 	}))
 
 	//r.Post("/login")
 	//r.Mount("/auth", Login.Router())
-	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
-		w.Write(([]byte("hello world")))
-	})
+	// r.Get("/", func(w http.ResponseWriter, r *http.Request) {
+	// 	w.Write(([]byte("hello world")))
+	// })
 
 	UserController := NewUserController(usecases)
 	//authController := auth.NewAuthController(UserController)
