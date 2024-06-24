@@ -23,6 +23,7 @@ type BondModel struct {
 	InterestPaymentFrequency string             `bson:"interest_payment_frequency"`
 	MaturityDate             time.Time          `bson:"maturity_rate"`
 	Description              string             `bson:"description"`
+	Buyer                    string             `bson:"buyer"`
 	CreationAt               time.Time          `bson:"creation_at"`
 	UpdatedAt                time.Time          `bson:"updated_at"`
 }
@@ -53,6 +54,7 @@ func toBondModel(bond bondApi.Bond) (BondModel, error) {
 		InterestPaymentFrequency: bond.InterestPaymentFrequency,
 		MaturityDate:             bond.MaturityDate,
 		Description:              bond.Description,
+		Buyer:                    bond.Buyer,
 		CreationAt:               bond.CreatedAt,
 		UpdatedAt:                bond.UpdatedAt,
 	}, nil
