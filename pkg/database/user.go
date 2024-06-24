@@ -21,7 +21,7 @@ type UserModel struct {
 	PurchasedBonds []bondApi.Bond     `bson:"purchased_bonds"`
 }
 
-func toUserModel(user bondApi.User) (UserModel, error) {
+func toUserModel(user *bondApi.User) (UserModel, error) {
 
 	var userId primitive.ObjectID
 	var err error
@@ -60,7 +60,7 @@ func toUserApiModel(user UserModel) *bondApi.User {
 
 }
 
-func (c *MongoController) CreateUser(u bondApi.User) error {
+func (c *MongoController) CreateUser(u *bondApi.User) error {
 
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second) // Adjust timeout as needed
 	defer cancel()
