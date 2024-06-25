@@ -146,6 +146,11 @@ func (u *UserController) BuyBond(w http.ResponseWriter, r *http.Request) {
 			w.WriteHeader(http.StatusBadRequest)
 			return
 		}
+		err = u.Usecase.UpdateUserBuyedBondsr(userId, *bond)
+		if err != nil {
+			w.WriteHeader(http.StatusBadRequest)
+			return
+		}
 		w.WriteHeader(http.StatusOK)
 		json.NewEncoder(w).Encode("Success")
 	} else {

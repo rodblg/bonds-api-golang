@@ -57,6 +57,15 @@ func (u *UsecasesController) UpdateBondBuyer(bondId string, buyerId string) erro
 	return nil
 }
 
+func (u *UsecasesController) UpdateUserBuyedBondsr(userId string, bond bondApi.Bond) error {
+	log.Println("updating bond in user db...")
+	err := u.Storage.UpdateUser(userId, bond)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
 func (u *UsecasesController) CreateUser(data *bondApi.User) error {
 
 	log.Println("entering usecases")

@@ -116,3 +116,43 @@ func (c *MongoController) GetUser(email string) (*bondApi.User, error) {
 	result := toUserApiModel(user)
 	return result, nil
 }
+
+func (c *MongoController) UpdateUser(userId string, bond bondApi.Bond) error {
+
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+
+	col := c.Db.Collection("users")
+
+	id, err := primitive.ObjectIDFromHex(userId)
+	if err != nil {
+		return fmt.Errorf("error with userid")
+	}
+
+	var user UserModel
+	err = col.FindOne(ctx, bson.M{"_id": bson.M{"$eq": id}}).Decode(&user)
+	if err == mongo.ErrNoDocuments {
+		return fmt.Errorf("element with ID: %s is not found", userId)
+	} else if err != nil {
+		return fmt.Errorf("error fetching element: %w", err)
+	}
+
+	user.PurchasedBonds = append(user.PurchasedBonds, bond)
+
+	now := time.Now()
+	user.UpdatedAt = now
+
+	update := bson.D{{"$set", bson.M{
+		"purchased_bonds": user.PurchasedBonds,
+		"updated_at":      now,
+	}}}
+
+	_, err = col.UpdateOne(ctx, bson.M{"_id": bson.M{"$eq": id}}, update)
+	if err != nil {
+		return err
+	}
+
+	//result := toBondApiModel(updatedBond)
+
+	return nil
+}
