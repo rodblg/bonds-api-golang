@@ -7,11 +7,11 @@ import (
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/go-chi/cors"
 	"github.com/go-chi/render"
-
+	"github.com/rodblg/bonds-api-golang/pkg/auth"
 	"github.com/rodblg/bonds-api-golang/pkg/usecases"
 )
 
-func ListenAndServe(u *usecases.Usecases) {
+func ListenAndServe(usecases *usecases.UsecasesController) {
 
 	r := chi.NewRouter()
 
@@ -24,17 +24,21 @@ func ListenAndServe(u *usecases.Usecases) {
 	r.Use(cors.Handler(cors.Options{
 		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
 		AllowedHeaders:   []string{"Accept", "Authorization", "Content-Type", "X-CSRF-Token"},
-		ExposedHeaders:   []string{"Link"},
 		AllowCredentials: true,
 	}))
 
 	//r.Post("/login")
 	//r.Mount("/auth", Login.Router())
-	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
-		w.Write(([]byte("hello world")))
-	})
-	r.Mount("/user", NewUserController().Routes())
+	// r.Get("/", func(w http.ResponseWriter, r *http.Request) {
+	// 	w.Write(([]byte("hello world")))
+	// })
+
+	UserController := NewUserController(usecases)
+	//authController := auth.NewAuthController(UserController)
+	authController := auth.NewAuthController(usecases)
+
+	r.Mount("/auth", authController.Routes())
+	r.Mount("/user", UserController.Routes())
 
 	http.ListenAndServe(":8080", r)
-
 }
