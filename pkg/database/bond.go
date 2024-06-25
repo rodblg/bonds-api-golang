@@ -75,6 +75,7 @@ func toBondApiModel(bond BondModel) *bondApi.Bond {
 		InterestPaymentFrequency: bond.InterestPaymentFrequency,
 		MaturityDate:             bond.MaturityDate,
 		Description:              bond.Description,
+		Buyer:                    bond.Buyer,
 		CreatedAt:                bond.CreationAt,
 		UpdatedAt:                bond.UpdatedAt,
 	}
@@ -161,6 +162,45 @@ func (c *MongoController) InsertNewBond(b bondApi.Bond) error {
 	}
 
 	log.Println("successfully inserted new bond: ", result.InsertedID)
+	return nil
+}
+
+func (c *MongoController) UpdateBond(bondId, buyerId string) error {
+
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+
+	col := c.Db.Collection(c.CollName)
+
+	id, err := primitive.ObjectIDFromHex(bondId)
+	if err != nil {
+		return fmt.Errorf("error with bondid")
+	}
+
+	var bond BondModel
+	err = col.FindOne(ctx, bson.M{"_id": bson.M{"$eq": id}}).Decode(&bond)
+	if err == mongo.ErrNoDocuments {
+		return fmt.Errorf("element with ID: %s is not found", bondId)
+	} else if err != nil {
+		return fmt.Errorf("error fetching element: %w", err)
+	}
+
+	bond.Buyer = buyerId
+	now := time.Now()
+	bond.UpdatedAt = now
+
+	update := bson.D{{"$set", bson.M{
+		"buyer":      buyerId,
+		"updated_at": now,
+	}}}
+
+	_, err = col.UpdateOne(ctx, bson.M{"_id": bson.M{"$eq": id}}, update)
+	if err != nil {
+		return err
+	}
+
+	//result := toBondApiModel(updatedBond)
+
 	return nil
 }
 

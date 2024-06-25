@@ -32,7 +32,7 @@ func (u *UserController) Routes() chi.Router {
 	r.Post("/bond", u.PublishNewBond)
 
 	r.Post("/", u.CreateUser)
-	//r.Get("/bond/buy/{id}", u.BuyBond)
+	r.Get("/bond/buy/{id}", u.BuyBond)
 	// r.Get()
 	// r.Post("/")
 	// r.Post()
@@ -108,6 +108,52 @@ func (u *UserController) PublishNewBond(w http.ResponseWriter, r *http.Request) 
 	w.WriteHeader(http.StatusCreated)
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(newData)
+
+}
+
+func (u *UserController) BuyBond(w http.ResponseWriter, r *http.Request) {
+
+	//get user info from token auth and mongo
+	email := r.Context().Value("email").(string)
+	id := r.Context().Value("id").(string)
+
+	log.Println(email, id)
+
+	user, err := u.Usecase.GetUser(email)
+	if err != nil {
+		log.Println(err)
+		return
+	}
+
+	userId := user.ID
+	//Get bond request id
+	bondId := chi.URLParam(r, "id")
+	if bondId == "" {
+		//render.Render(w, r, http.StatusBadRequest)
+		log.Println("error fetching url {id}")
+		return
+	}
+
+	bond, err := u.Usecase.GetBond(bondId)
+	if err != nil {
+		log.Println("error fetching bond: ", err)
+		return
+	}
+	log.Println(bond.Buyer)
+	if bond.Buyer == "" {
+		err := u.Usecase.UpdateBondBuyer(bondId, userId)
+		if err != nil {
+			w.WriteHeader(http.StatusBadRequest)
+			return
+		}
+		w.WriteHeader(http.StatusOK)
+		json.NewEncoder(w).Encode("Success")
+	} else {
+		w.Header().Set("Content-Type", "application/json")
+
+		w.WriteHeader(http.StatusOK)
+		json.NewEncoder(w).Encode("the bond has already been bought")
+	}
 
 }
 
