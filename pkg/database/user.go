@@ -19,6 +19,8 @@ type UserModel struct {
 	Email          string             `bson:"email"`
 	Password       string             `bson:"password"`
 	PurchasedBonds []bondApi.Bond     `bson:"purchased_bonds"`
+	CreationAt     time.Time          `bson:"creation_at"`
+	UpdatedAt      time.Time          `bson:"updated_at"`
 }
 
 func toUserModel(user *bondApi.User) (UserModel, error) {
@@ -43,6 +45,8 @@ func toUserModel(user *bondApi.User) (UserModel, error) {
 		Email:          user.Email,
 		Password:       user.Password,
 		PurchasedBonds: user.PurchasedBonds,
+		CreationAt:     user.CreatedAt,
+		UpdatedAt:      user.UpdatedAt,
 	}, nil
 }
 
@@ -56,6 +60,8 @@ func toUserApiModel(user UserModel) *bondApi.User {
 		Email:          user.Email,
 		Password:       user.Password,
 		PurchasedBonds: user.PurchasedBonds,
+		CreatedAt:      user.CreationAt,
+		UpdatedAt:      user.UpdatedAt,
 	}
 
 }
