@@ -1,6 +1,9 @@
 package bondApi
 
-import "time"
+import (
+	"net/http"
+	"time"
+)
 
 type User struct {
 	ID             string    `json:"id,omitempty"`
@@ -11,4 +14,20 @@ type User struct {
 	PurchasedBonds []Bond    `json:"purchased_bonds,omitempty"`
 	CreatedAt      time.Time `json:"created_at,omitempty"`
 	UpdatedAt      time.Time `json:"updated_at,omitempty"`
+}
+
+type UserResponse struct {
+	*User
+}
+
+func NewUserResponse(user *User) *UserResponse {
+	resp := &UserResponse{
+		User: user,
+	}
+
+	return resp
+}
+
+func (rd *UserResponse) Render(w http.ResponseWriter, r *http.Request) error {
+	return nil
 }

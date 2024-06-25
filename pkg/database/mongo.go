@@ -37,11 +37,7 @@ func MongoConnection(database string) (*mongo.Database, error) {
 	if err != nil {
 		return nil, err
 	}
-	// defer func() {
-	// 	if err := client.Disconnect(context.TODO()); err != nil {
-	// 		panic(err)
-	// 	}
-	// }()
+
 	db := client.Database(database)
 	log.Println("Successfully connected to MongoDB")
 

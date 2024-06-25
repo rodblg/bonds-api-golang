@@ -27,14 +27,7 @@ func ListenAndServe(usecases *usecases.UsecasesController) {
 		AllowCredentials: true,
 	}))
 
-	//r.Post("/login")
-	//r.Mount("/auth", Login.Router())
-	// r.Get("/", func(w http.ResponseWriter, r *http.Request) {
-	// 	w.Write(([]byte("hello world")))
-	// })
-
 	UserController := NewUserController(usecases)
-	//authController := auth.NewAuthController(UserController)
 	authController := auth.NewAuthController(usecases)
 
 	r.Mount("/auth", authController.Routes())

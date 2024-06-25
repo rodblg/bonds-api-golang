@@ -73,22 +73,17 @@ func (c *MongoController) CreateUser(u *bondApi.User) error {
 
 	col := c.Db.Collection("users")
 
-	//check if bond already exists
-
-	log.Println("accessing mongo controller")
 	now := time.Now()
 	u.CreatedAt = now
 	u.UpdatedAt = now
 
 	newUser, err := toUserModel(u)
 	if err != nil {
-		log.Println("error while mapping new bond")
 		return nil
 	}
 
 	result, err := col.InsertOne(ctx, newUser)
 	if err != nil {
-		//log.Println("error inserting bond: ", err)
 		return err
 	}
 
@@ -104,9 +99,7 @@ func (c *MongoController) GetUser(email string) (*bondApi.User, error) {
 	col := c.Db.Collection("users")
 
 	var user UserModel
-	//err := col.FindOne(ctx, bson.M{"email": bson.M{"$eq": email}}).Decode(&user)
 	err := col.FindOne(ctx, bson.M{"email": email}).Decode(&user)
-	//log.Println("==========", err)
 	if err == mongo.ErrNoDocuments {
 		return nil, fmt.Errorf("element with email: %s is not found", email)
 	} else if err != nil {
@@ -126,7 +119,7 @@ func (c *MongoController) UpdateUser(userId string, bond bondApi.Bond) error {
 
 	id, err := primitive.ObjectIDFromHex(userId)
 	if err != nil {
-		return fmt.Errorf("error with userid")
+		return err
 	}
 
 	var user UserModel
@@ -151,8 +144,6 @@ func (c *MongoController) UpdateUser(userId string, bond bondApi.Bond) error {
 	if err != nil {
 		return err
 	}
-
-	//result := toBondApiModel(updatedBond)
 
 	return nil
 }

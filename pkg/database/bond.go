@@ -91,7 +91,7 @@ func (c *MongoController) GetBond(bondId string) (*bondApi.Bond, error) {
 
 	id, err := primitive.ObjectIDFromHex(bondId)
 	if err != nil {
-		return nil, fmt.Errorf("error with bondid")
+		return nil, err
 	}
 
 	var bond BondModel
@@ -115,7 +115,7 @@ func (c *MongoController) GetAllBonds() ([]bondApi.Bond, error) {
 
 	cursor, err := col.Find(ctx, bson.M{})
 	if err != nil {
-		return nil, fmt.Errorf("error fetching documents")
+		return nil, err
 	}
 
 	defer cursor.Close(ctx)
@@ -123,7 +123,7 @@ func (c *MongoController) GetAllBonds() ([]bondApi.Bond, error) {
 	var allMongoBonds []BondModel
 
 	if err = cursor.All(context.TODO(), &allMongoBonds); err != nil {
-		return nil, fmt.Errorf("error while unpacking cursors into slice")
+		return nil, err
 	}
 
 	var allBonds []bondApi.Bond
@@ -142,22 +142,17 @@ func (c *MongoController) InsertNewBond(b bondApi.Bond) error {
 
 	col := c.Db.Collection(c.CollName)
 
-	//check if bond already exists
-
-	log.Println("accessing mongo controller")
 	now := time.Now()
 	b.CreatedAt = now
 	b.UpdatedAt = now
 
 	newBond, err := toBondModel(b)
 	if err != nil {
-		log.Println("error while mapping new bond")
 		return nil
 	}
 
 	result, err := col.InsertOne(ctx, newBond)
 	if err != nil {
-		//log.Println("error inserting bond: ", err)
 		return err
 	}
 
@@ -174,7 +169,7 @@ func (c *MongoController) UpdateBond(bondId, buyerId string) error {
 
 	id, err := primitive.ObjectIDFromHex(bondId)
 	if err != nil {
-		return fmt.Errorf("error with bondid")
+		return nil
 	}
 
 	var bond BondModel
@@ -198,21 +193,6 @@ func (c *MongoController) UpdateBond(bondId, buyerId string) error {
 	if err != nil {
 		return err
 	}
-
-	//result := toBondApiModel(updatedBond)
-
+	log.Println("bond update successful")
 	return nil
 }
-
-// type Bond struct {
-// 	ID                       string    `json:"id,omitempty"`
-// 	Name                     string    `json:"name"`
-// 	FaceValue                float64   `json:"face_value"`    //Original principal amount of the bond
-// 	CurrentValue             float64   `json:"current_value"` //
-// 	Isin                     string    `json:"isin"`          //International Securities Identification Number (ISIN)
-// 	Issuer                   string    `json:"issuer"`        //Issuer of the bond
-// 	InterestRate             float64   `json:"interest_rate"`
-// 	InterestPaymentFrequency string    `json:"interest_payment_frequency"`
-// 	MaturityDate             time.Time `json:"maturity_date"`
-// 	Description              string    `json:"description"`
-// }

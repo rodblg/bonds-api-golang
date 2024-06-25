@@ -2,28 +2,36 @@ package auth
 
 import (
 	"context"
-	"fmt"
+	"errors"
+	"log"
 	"net/http"
 	"strings"
+
+	"github.com/go-chi/render"
+	"github.com/rodblg/bonds-api-golang/pkg/bondApi"
 )
 
 func Authentication() func(http.Handler) http.Handler {
 	return func(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+
 			clientToken := r.Header.Get("Authorization")
 			clientToken = strings.TrimPrefix(clientToken, "Bearer ")
+
 			if clientToken == "" {
-				w.WriteHeader(http.StatusUnauthorized)
-				fmt.Fprintf(w, "Unauthorized: No authorization header provided")
+				log.Println("error no authorization header provided")
+				err := errors.New("no authorization header provided")
+				render.Render(w, r, bondApi.ErrRender(err, http.StatusUnauthorized, bondApi.ErrNoAuth))
 				return
 			}
+
 			claims, err := ValidateToken(clientToken)
 			if err != nil {
-				w.WriteHeader(http.StatusUnauthorized)
-				fmt.Fprintf(w, "Unauthorized: Invalid token (%v)", err)
+				log.Println("error validating token")
+				render.Render(w, r, bondApi.ErrRender(err, http.StatusUnauthorized, bondApi.ErrNoAuth))
 				return
 			}
-			// Set user data on context (assuming claims has Email and Uid)
+
 			ctx := context.WithValue(r.Context(), "email", claims.Email)
 			ctx = context.WithValue(ctx, "id", claims.ID)
 			r = r.WithContext(ctx)

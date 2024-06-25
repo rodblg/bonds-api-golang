@@ -17,7 +17,8 @@ func main() {
 
 	mongoDatabase, err := database.MongoConnection(databaseName)
 	if err != nil {
-		log.Println("error with database connection", err)
+		log.Printf("error with database connection: %v", err)
+		log.Fatal(err)
 	}
 
 	storage := database.NewMongoController(mongoDatabase, collectionName)
@@ -31,7 +32,7 @@ func main() {
 func initialMongoSetUp(u *usecases.UsecasesController) {
 	user, err := u.GetUser("rb12@email.com")
 	if err != nil {
-		log.Print(err)
+		log.Printf("error with user setup: %v", err)
 	}
 	if user == nil {
 		password := auth.HashPassword("testing")
@@ -43,7 +44,7 @@ func initialMongoSetUp(u *usecases.UsecasesController) {
 		}
 		err := u.CreateUser(&initialUser)
 		if err != nil {
-			log.Println("error creating initial user")
+			log.Printf("error with user setup: %v", err)
 		}
 	}
 }
