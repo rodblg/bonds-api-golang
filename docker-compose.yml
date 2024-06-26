@@ -1,5 +1,15 @@
 version: '3'
 services:
+
+  api:
+    build: . 
+    ports: 
+      - 8080:8080
+    depends_on: 
+      - mongodb
+    working_dir: /app 
+    command: go run ./cmd/main.go
+        
   mongodb:
     image: mongo
     container_name: mongodb
