@@ -1,12 +1,15 @@
 package auth
 
 import (
+	"errors"
 	"fmt"
 	"log"
 	"net/http"
 
 	"github.com/go-chi/chi/v5"
+	"github.com/go-chi/render"
 	"github.com/golang-jwt/jwt/v5"
+	"github.com/rodblg/bonds-api-golang/pkg/bondApi"
 	"github.com/rodblg/bonds-api-golang/pkg/usecases"
 	"golang.org/x/crypto/bcrypt"
 )
@@ -37,13 +40,10 @@ func NewAuthController(u *usecases.UsecasesController) *AuthController {
 }
 
 func (c *AuthController) Routes() chi.Router {
-	r := chi.NewRouter()
 
+	r := chi.NewRouter()
 	r.Post("/login", c.Login)
-	//r.Get("/bond/buy/{id}", u.BuyBond)
-	// r.Get()
-	// r.Post("/")
-	// r.Post()
+
 	return r
 }
 
@@ -51,28 +51,31 @@ func (c *AuthController) Login(w http.ResponseWriter, r *http.Request) {
 
 	email, password, ok := r.BasicAuth()
 	if !ok {
-		// If the structure of the body is wrong, return an HTTP error
-		w.WriteHeader(http.StatusBadRequest)
+		err := errors.New("error extracting basic authentication credentials")
+		render.Render(w, r, bondApi.ErrRender(err, http.StatusBadRequest, bondApi.ErrBasicAuth))
 		return
 	}
 
 	user, err := c.User.GetUser(email)
 	if err != nil {
-		log.Println("user not found", err)
-		w.WriteHeader(http.StatusBadRequest)
+		log.Println("user not found")
+		render.Render(w, r, bondApi.ErrRender(err, http.StatusBadRequest, bondApi.ErrNotFound))
 		return
 	}
-	// 	log.Print(user, err)
 
 	err = VerifyPassword(password, user.Password)
 	if err != nil {
 		log.Println("invalid credentials")
-		w.WriteHeader(http.StatusUnauthorized)
+		render.Render(w, r, bondApi.ErrRender(err, http.StatusBadRequest, bondApi.ErrBadRequest))
 		return
 	}
 
-	token, refershToken, _ := TokenGenerator(user.Email, user.ID)
-	log.Println(refershToken)
+	token, _, err := TokenGenerator(user.Email, user.ID)
+	if err != nil {
+		log.Println("failed token generation")
+		render.Render(w, r, bondApi.ErrRender(err, http.StatusBadRequest, bondApi.ErrBadRequest))
+		return
+	}
 
 	w.Header().Set("Content-Type", "application/json")
 	w.Header().Set("Authorization", "Bearer "+token)
@@ -84,7 +87,6 @@ func (c *AuthController) Login(w http.ResponseWriter, r *http.Request) {
 func HashPassword(password string) string {
 	bytes, err := bcrypt.GenerateFromPassword([]byte(password), 14)
 	if err != nil {
-		//handle error
 		log.Panic(err)
 	}
 	return string(bytes)
@@ -93,7 +95,7 @@ func HashPassword(password string) string {
 func VerifyPassword(userPassword, givenPassword string) error {
 	err := bcrypt.CompareHashAndPassword([]byte(givenPassword), []byte(userPassword))
 	if err != nil {
-		//handle error
+		log.Println(err)
 		return fmt.Errorf("invalid credentials")
 	}
 

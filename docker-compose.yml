@@ -1,14 +1,28 @@
 version: '3'
 services:
+
+  api:
+    build: . 
+    ports: 
+      - 8080:8080
+    depends_on: 
+      - mongodb
+    working_dir: /app 
+    env_file:
+      - ./environments/development.env 
+    command: go run ./cmd/main.go
+        
   mongodb:
     image: mongo
     container_name: mongodb
     restart: always
     ports:
       - 27017:27017
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: example
+    env_file:
+      - ./environments/development.env   
+    # environment:
+    #   MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
+    #   MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
     volumes:
       - mongo-data:/data/db
 volumes:
