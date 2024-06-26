@@ -154,10 +154,12 @@ func (u *UserController) BuyBond(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
 		json.NewEncoder(w).Encode("the transaction is complete")
 	} else {
-		w.Header().Set("Content-Type", "application/json")
+		// w.Header().Set("Content-Type", "application/json")
 
-		w.WriteHeader(http.StatusOK)
-		json.NewEncoder(w).Encode("the bond is not available")
+		// w.WriteHeader(http.StatusOK)
+		// json.NewEncoder(w).Encode("the bond is not available")
+		err := errors.New("the bond is not available")
+		render.Render(w, r, bondApi.ErrRender(err, http.StatusBadRequest, bondApi.ErrBadRequest))
 	}
 
 }
