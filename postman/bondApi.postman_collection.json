@@ -1,0 +1,522 @@
+{
+	"info": {
+		"_postman_id": "b928c640-89b1-4b35-8d29-af0106e6bde0",
+		"name": "bondApi",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "22820118"
+	},
+	"item": [
+		{
+			"name": "NewBond",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJJRCI6IjY2N2I3NTU1ZTliMDc1OTg0ZWI4Y2ZmMiIsIkVtYWlsIjoidGVzdGVtYWlsQGVtYWlsLmNvbSIsImV4cCI6MTcxOTQ1MzQzM30.eA6WCMiIX7VtlNNv7QaOhwoyrxtVjTR86kRVfIqDBVU",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n\"name\": \"12111-Year Treasury Note\",\r\n\"face_value\": 10000.0,\r\n\"current_value\": 9850.25,\r\n\"isin\": \"912828VM6\",\r\n\"issuer\": \"Department of the Treasury\",\r\n\"interest_rate\": 0.025,\r\n\"interest_payment_frequency\": \"Semi-annual\",\r\n\"maturity_date\": \"2023-11-15T00:00:00Z\",\r\n\"description\": \"This is a sample 20-year Treasury Note issued by the government.\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/user/bond",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"user",
+						"bond"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetBond",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJJRCI6IjY2N2I3NTU1ZTliMDc1OTg0ZWI4Y2ZmMiIsIkVtYWlsIjoidGVzdGVtYWlsQGVtYWlsLmNvbSIsImV4cCI6MTcxOTQ1MzQzM30.eA6WCMiIX7VtlNNv7QaOhwoyrxtVjTR86kRVfIqDBVU",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/user/bond/667b75ade9b075984eb8cff3",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"user",
+						"bond",
+						"667b75ade9b075984eb8cff3"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "GetBond",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/user/bond/667b75ade9b075984eb8cff3",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"user",
+								"bond",
+								"667b75ade9b075984eb8cff3"
+							]
+						}
+					},
+					"status": "Created",
+					"code": 201,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Vary",
+							"value": "Origin"
+						},
+						{
+							"key": "Date",
+							"value": "Wed, 26 Jun 2024 17:05:17 GMT"
+						},
+						{
+							"key": "Content-Length",
+							"value": "477"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json",
+							"description": "",
+							"type": "text"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"id\": \"667b75ade9b075984eb8cff3\",\n    \"name\": \"12200-Year Treasury Note\",\n    \"face_value\": 10000,\n    \"current_value\": 9850.25,\n    \"isin\": \"912828VM6\",\n    \"issuer\": \"U.S. Department of the Treasury\",\n    \"interest_rate\": 0.025,\n    \"interest_payment_frequency\": \"Semi-annual\",\n    \"maturity_date\": \"2023-11-15T00:00:00Z\",\n    \"description\": \"This is a sample 10-year Treasury Note issued by the U.S. government.\",\n    \"buyer\": \"667b7555e9b075984eb8cff2\",\n    \"created_at\": \"2024-06-26T01:58:05.56Z\",\n    \"updated_at\": \"2024-06-26T01:59:51.632Z\"\n}"
+				}
+			]
+		},
+		{
+			"name": "GetAllBonds",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJJRCI6IjY2N2I3NTU1ZTliMDc1OTg0ZWI4Y2ZmMiIsIkVtYWlsIjoidGVzdGVtYWlsQGVtYWlsLmNvbSIsImV4cCI6MTcxOTQ1MzQzM30.eA6WCMiIX7VtlNNv7QaOhwoyrxtVjTR86kRVfIqDBVU",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/user/bond",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"user",
+						"bond"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "GetAllBonds",
+					"originalRequest": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [],
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/user/bond",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"user",
+								"bond"
+							]
+						}
+					},
+					"status": "Created",
+					"code": 201,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Vary",
+							"value": "Origin"
+						},
+						{
+							"key": "Date",
+							"value": "Wed, 26 Jun 2024 17:04:42 GMT"
+						},
+						{
+							"key": "Content-Length",
+							"value": "479"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json",
+							"description": "",
+							"type": "text"
+						}
+					],
+					"cookie": [],
+					"body": "[\n    {\n        \"id\": \"667b75ade9b075984eb8cff3\",\n        \"name\": \"12200-Year Treasury Note\",\n        \"face_value\": 10000,\n        \"current_value\": 9850.25,\n        \"isin\": \"912828VM6\",\n        \"issuer\": \"U.S. Department of the Treasury\",\n        \"interest_rate\": 0.025,\n        \"interest_payment_frequency\": \"Semi-annual\",\n        \"maturity_date\": \"2023-11-15T00:00:00Z\",\n        \"description\": \"This is a sample 10-year Treasury Note issued by the U.S. government.\",\n        \"buyer\": \"667b7555e9b075984eb8cff2\",\n        \"created_at\": \"2024-06-26T01:58:05.56Z\",\n        \"updated_at\": \"2024-06-26T01:59:51.632Z\"\n    }\n]"
+				}
+			]
+		},
+		{
+			"name": "CreateUser",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJJRCI6IjY2NzlmYzVjOWIwNGRjZWQxNzdjN2QzYyIsIkVtYWlsIjoicmIxMkBlbWFpbC5jb20iLCJleHAiOjE3MTk0Mzk0NjR9.XFGdMkL39lBFgRkKBPxqJ06F8wQ-w6hGJnQEOq1LqfI",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"name\": \"John\",\r\n  \"last_name\": \"Smith\",\r\n  \"email\": \"john.doe@example.com\",\r\n  \"password\":\"testing\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/user/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"user",
+						""
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "CreateUser",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"John\",\r\n  \"last_name\": \"Smith\",\r\n  \"email\": \"john.doe@example.com\",\r\n  \"password\":\"testing\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/user/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"user",
+								""
+							]
+						}
+					},
+					"status": "Created",
+					"code": 201,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Vary",
+							"value": "Origin"
+						},
+						{
+							"key": "Date",
+							"value": "Wed, 26 Jun 2024 17:04:33 GMT"
+						},
+						{
+							"key": "Content-Length",
+							"value": "233"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"name\": \"John\",\n    \"last_name\": \"Smith\",\n    \"email\": \"john.doe@example.com\",\n    \"password\": \"$2a$14$JjmkuwDJMN/vMYwjFSCezuhyh6Hbw4lWctqu.jlEa4ncHsXD0CrMm\",\n    \"created_at\": \"2024-06-26T17:04:33.197186902Z\",\n    \"updated_at\": \"2024-06-26T17:04:33.197186902Z\"\n}"
+				}
+			]
+		},
+		{
+			"name": "login",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "testing_pass",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "testemail@email.com",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": []
+				},
+				"url": {
+					"raw": "http://localhost:8080/auth/login",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"auth",
+						"login"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "login",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "http://localhost:8080/auth/login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					},
+					"status": "Created",
+					"code": 201,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Access-Control-Expose-Headers",
+							"value": "Authorization"
+						},
+						{
+							"key": "Authorization",
+							"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJJRCI6IjY2N2I3NTU1ZTliMDc1OTg0ZWI4Y2ZmMiIsIkVtYWlsIjoidGVzdGVtYWlsQGVtYWlsLmNvbSIsImV4cCI6MTcxOTUwNzgzN30.pkQGyxogoKMT35SmlaL8NK1fIMGY14CnuD_Y9W1EeUQ"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Vary",
+							"value": "Origin"
+						},
+						{
+							"key": "Date",
+							"value": "Wed, 26 Jun 2024 17:03:57 GMT"
+						},
+						{
+							"key": "Content-Length",
+							"value": "0"
+						}
+					],
+					"cookie": [],
+					"body": null
+				}
+			]
+		},
+		{
+			"name": "BuyBond",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJJRCI6IjY2N2I3NTU1ZTliMDc1OTg0ZWI4Y2ZmMiIsIkVtYWlsIjoidGVzdGVtYWlsQGVtYWlsLmNvbSIsImV4cCI6MTcxOTQ1MzQzM30.eA6WCMiIX7VtlNNv7QaOhwoyrxtVjTR86kRVfIqDBVU",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/user/bond/buy/667c4a85c53918856d63cad7",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"user",
+						"bond",
+						"buy",
+						"667c4a85c53918856d63cad7"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "BondNoAvailable",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/user/bond/buy/667b75ade9b075984eb8cff3",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"user",
+								"bond",
+								"buy",
+								"667b75ade9b075984eb8cff3"
+							]
+						}
+					},
+					"status": "Bad Request",
+					"code": 400,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Vary",
+							"value": "Origin"
+						},
+						{
+							"key": "Date",
+							"value": "Wed, 26 Jun 2024 17:05:40 GMT"
+						},
+						{
+							"key": "Content-Length",
+							"value": "61"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"status\": \"bad request\",\n    \"error\": \"the bond is not available\"\n}"
+				},
+				{
+					"name": "BuyBond",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/user/bond/buy/667c4a85c53918856d63cad7",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"user",
+								"bond",
+								"buy",
+								"667c4a85c53918856d63cad7"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "plain",
+					"header": [
+						{
+							"key": "Vary",
+							"value": "Origin"
+						},
+						{
+							"key": "Date",
+							"value": "Wed, 26 Jun 2024 17:06:46 GMT"
+						},
+						{
+							"key": "Content-Length",
+							"value": "30"
+						},
+						{
+							"key": "Content-Type",
+							"value": "text/plain; charset=utf-8"
+						}
+					],
+					"cookie": [],
+					"body": "\"the transaction is complete\"\n"
+				}
+			]
+		}
+	]
+}
