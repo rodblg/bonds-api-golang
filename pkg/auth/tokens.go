@@ -1,6 +1,7 @@
 package auth
 
 import (
+	"os"
 	"time"
 
 	"github.com/golang-jwt/jwt"
@@ -12,7 +13,9 @@ type SignedDetails struct {
 	jwt.StandardClaims
 }
 
-var secret = []byte("my_secret")
+var SECRET_KEY = os.Getenv("SECRET_KEY")
+
+var secret = []byte(SECRET_KEY)
 
 func TokenGenerator(email string, id string) (signedToken string, signedFreshToken string, err error) {
 	claims := &SignedDetails{

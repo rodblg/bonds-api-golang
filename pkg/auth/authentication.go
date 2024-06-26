@@ -14,8 +14,6 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-var jwtKey = []byte("my_secret")
-
 type Claims struct {
 	Username string `json:"username"`
 	jwt.RegisteredClaims
