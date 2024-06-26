@@ -19,7 +19,7 @@ func TokenGenerator(email string, id string) (signedToken string, signedFreshTok
 		ID:    id,
 		Email: email,
 		StandardClaims: jwt.StandardClaims{
-			ExpiresAt: time.Now().Local().Add(time.Hour * time.Duration(24)).Unix(),
+			ExpiresAt: time.Now().Local().Add(time.Minute * time.Duration(5)).Unix(),
 		},
 	}
 
